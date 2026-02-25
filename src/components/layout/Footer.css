@@ -1,0 +1,205 @@
+.footer {
+    background: var(--bg-darker);
+    padding: var(--space-4xl) 0 0;
+    border-top: 1px solid var(--border-color);
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.footer__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+}
+
+/* Brand Col */
+.footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: var(--space-lg);
+}
+
+.footer__logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: var(--text-dark);
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: 1.1rem;
+    border-radius: var(--radius-sm);
+}
+
+.footer__logo-text {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    color: var(--text-white);
+    letter-spacing: 3px;
+}
+
+.footer__desc {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.8;
+    margin-bottom: var(--space-lg);
+    max-width: 280px;
+}
+
+.footer__social {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.footer__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.footer__social-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+.footer__social-link:hover {
+    background: var(--primary);
+    color: var(--text-dark);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Columns */
+.footer__heading {
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--space-xl);
+    position: relative;
+}
+
+.footer__heading::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--primary);
+}
+
+.footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer__link {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    transition: all var(--transition-fast);
+    position: relative;
+    padding-left: 0;
+}
+
+.footer__link:hover {
+    color: var(--text-white);
+    padding-left: 8px;
+}
+
+/* Contact */
+.footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer__contact-item {
+    display: flex;
+    gap: 0.75rem;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+}
+
+.footer__contact-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Bottom */
+.footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-xl) 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer__copy {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+}
+
+.footer__bottom-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer__bottom-link {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    transition: color var(--transition-fast);
+}
+
+.footer__bottom-link:hover {
+    color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .footer__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-2xl);
+    }
+}
+
+@media (max-width: 768px) {
+    .footer__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+    }
+
+    .footer__bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}

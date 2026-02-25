@@ -1,0 +1,142 @@
+/* Post a Job Page */
+
+.postjob {
+    min-height: 100vh;
+}
+
+/* Hero */
+.postjob__hero {
+    padding: 3rem 0 2.5rem;
+    background: linear-gradient(180deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.postjob__hero-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Breadcrumb */
+.postjob__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.postjob__breadcrumb-link {
+    cursor: pointer;
+    color: var(--primary);
+    transition: opacity var(--transition-fast);
+}
+
+.postjob__breadcrumb-link:hover {
+    opacity: 0.7;
+}
+
+.postjob__breadcrumb-sep {
+    opacity: 0.4;
+}
+
+/* Title */
+.postjob__title {
+    font-family: var(--font-heading);
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+}
+
+.postjob__subtitle {
+    font-size: var(--fs-base);
+    color: var(--text-muted);
+    max-width: 480px;
+}
+
+/* Hero stats */
+.postjob__hero-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.postjob__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.postjob__stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--fs-2xl);
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.postjob__stat-label {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Form area */
+.postjob__form-wrapper {
+    padding: 3rem 0 2rem;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+/* Toast notification */
+.postjob__toast {
+    position: fixed;
+    top: calc(var(--navbar-height) + var(--topstrip-height) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    padding: 1rem 1.75rem;
+    border-radius: var(--radius-lg);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    animation: fadeInUp 0.3s ease;
+    max-width: 480px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.postjob__toast--success {
+    background: rgba(39, 174, 96, 0.15);
+    border: 1px solid rgba(39, 174, 96, 0.4);
+    color: #2ecc71;
+}
+
+.postjob__toast--error {
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .postjob__hero {
+        padding: 2rem 0 1.5rem;
+    }
+
+    .postjob__title {
+        font-size: var(--fs-2xl);
+    }
+
+    .postjob__hero-stats {
+        gap: 1.25rem;
+    }
+
+    .postjob__form-wrapper {
+        padding: 2rem 0;
+    }
+}
