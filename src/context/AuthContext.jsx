@@ -68,6 +68,18 @@ export const AuthProvider = ({ children }) => {
         return result.user;
     };
 
+    // Update user role
+    const updateRole = async (newRole) => {
+        if (!user) return;
+        try {
+            await setDoc(doc(db, 'users', user.uid), { role: newRole }, { merge: true });
+            setUser((prev) => ({ ...prev, role: newRole }));
+        } catch (err) {
+            console.error('Failed to update role:', err.message);
+            throw err;
+        }
+    };
+
     // Logout
     const logout = async () => {
         await signOut(auth);
@@ -75,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, register, logout, updateRole, loading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import useAuth from '../hooks/useAuth';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -53,6 +55,7 @@ const RECENT_JOBS = [
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
+    const [role, setRole] = useState('jobseeker');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
@@ -67,8 +70,33 @@ const Login = () => {
         setError('');
         setLoading(true);
         try {
-            await login(formData.email, formData.password);
-            navigate(redirectTo, { replace: true });
+            const userCred = await login(formData.email, formData.password);
+
+            // Update role in Firestore on every login
+            const uid = userCred.uid;
+            const userRef = doc(db, 'users', uid);
+            const userSnap = await getDoc(userRef).catch(() => null);
+
+            if (userSnap && userSnap.exists()) {
+                // Update existing doc with selected role
+                await setDoc(userRef, { role }, { merge: true });
+            } else {
+                // Create user doc if it doesn't exist
+                await setDoc(userRef, {
+                    name: userCred.displayName || '',
+                    email: userCred.email,
+                    role,
+                    createdAt: new Date().toISOString(),
+                });
+            }
+
+            // Redirect based on role
+            if (redirectTo === '/') {
+                const dashPath = role === 'employer' ? '/dashboard/employer' : '/dashboard/seeker';
+                navigate(dashPath, { replace: true });
+            } else {
+                navigate(redirectTo, { replace: true });
+            }
         } catch (err) {
             setError(
                 err.code === 'auth/invalid-credential' ? 'Invalid email or password'
@@ -104,6 +132,24 @@ const Login = () => {
                         <Input label="Password" type="password" name="password"
                             placeholder="Enter your password" value={formData.password}
                             onChange={handleChange} required />
+
+                        {/* Role Toggle */}
+                        <div className="login-role">
+                            <label className="login-role-label">Continue as</label>
+                            <div className="login-role-btns">
+                                {[
+                                    { val: 'jobseeker', icon: '🎯', text: 'Job Seeker' },
+                                    { val: 'employer', icon: '🏢', text: 'Employer' },
+                                ].map(({ val, icon, text }) => (
+                                    <button key={val} type="button"
+                                        className={`login-role-btn ${role === val ? 'login-role-btn--active' : ''}`}
+                                        onClick={() => setRole(val)}>
+                                        <span className="login-role-btn-icon">{icon}</span>
+                                        <span>{text}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
 
                         <div className="login-options">
                             <label className="login-checkbox">

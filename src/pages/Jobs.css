@@ -157,6 +157,94 @@
     margin-top: auto;
 }
 
+/* Active Filters */
+.jobs-page__filters {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+}
+
+.jobs-page__filter-label {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+
+.jobs-page__filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    background: var(--primary-light);
+    border: 1px solid rgba(245, 180, 0, 0.3);
+    border-radius: 50px;
+    color: var(--primary);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+}
+
+.jobs-page__filter-clear {
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.jobs-page__filter-clear:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+/* Empty State */
+.jobs-page__empty {
+    text-align: center;
+    padding: var(--space-4xl) var(--space-xl);
+}
+
+.jobs-page__empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+}
+
+.jobs-page__empty h3 {
+    font-family: var(--font-heading);
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    color: var(--text-white);
+    margin-bottom: 0.5rem;
+}
+
+.jobs-page__empty p {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+}
+
+.jobs-page__empty-btn {
+    padding: 0.6rem 1.5rem;
+    background: var(--primary);
+    color: var(--text-dark);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.jobs-page__empty-btn:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 4px 16px rgba(245, 180, 0, 0.3);
+}
+
 @media (max-width: 768px) {
     .jobs-page__search {
         flex-direction: column;
@@ -171,5 +259,14 @@
 
     .jobs-page__grid {
         grid-template-columns: 1fr;
+    }
+
+    .jobs-page__filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jobs-page__filter-clear {
+        margin-left: 0;
     }
 }

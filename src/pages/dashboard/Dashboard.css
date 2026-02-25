@@ -208,6 +208,167 @@
     letter-spacing: 0.5px;
 }
 
+/* ──── Role Row & Edit ──── */
+.dashboard__role-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.dashboard__role-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    background: none;
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.dashboard__role-edit:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.dashboard__role-edit svg {
+    flex-shrink: 0;
+}
+
+/* ──── Role Switch Modal ──── */
+.role-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.role-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 420px;
+    margin: 1rem;
+    overflow: hidden;
+    animation: fadeInUp 0.3s ease;
+}
+
+.role-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(245, 180, 0, 0.05), transparent);
+}
+
+.role-modal__title {
+    font-family: var(--font-heading);
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+.role-modal__close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color var(--transition-fast);
+}
+
+.role-modal__close:hover {
+    color: var(--text-white);
+}
+
+.role-modal__desc {
+    padding: 1rem 1.5rem 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+
+.role-modal__options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.role-modal__option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-fast);
+    color: var(--text-white);
+    width: 100%;
+}
+
+.role-modal__option:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.role-modal__option--active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: 0 0 20px rgba(245, 180, 0, 0.1);
+}
+
+.role-modal__option-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+}
+
+.role-modal__option-title {
+    font-family: var(--font-heading);
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--text-white);
+    display: block;
+}
+
+.role-modal__option-desc {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.15rem;
+}
+
+.role-modal__option-check {
+    margin-left: auto;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.role-modal__loading {
+    text-align: center;
+    padding: 0 1.5rem 1.25rem;
+    font-size: var(--fs-sm);
+    color: var(--primary);
+    font-weight: 600;
+}
+
 /* ──── Responsive ──── */
 @media (max-width: 1024px) {
     .dashboard__grid {
@@ -242,5 +403,9 @@
         width: 56px;
         height: 56px;
         font-size: 1.25rem;
+    }
+
+    .role-modal {
+        max-width: 95vw;
     }
 }
