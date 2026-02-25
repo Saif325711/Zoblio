@@ -16,8 +16,11 @@ const Layout = () => {
 
     return (
         <div className="app">
-            <TopStrip />
-            <Navbar />
+            <header className="app__header">
+                <TopStrip />
+                <Navbar />
+            </header>
+            <div className="app__header-spacer"></div>
             <AppRoutes />
             {!isAuthPage && <Footer />}
         </div>
