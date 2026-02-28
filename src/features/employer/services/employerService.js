@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, query, where, orderBy } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 
 export const employerService = {
@@ -41,11 +41,17 @@ export const employerService = {
     getEmployerJobs: async (employerId) => {
         const q = query(
             collection(db, 'jobs'),
-            where('employerId', '==', employerId),
-            orderBy('createdAt', 'desc')
+            where('employerId', '==', employerId)
         );
         const snapshot = await getDocs(q);
-        return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        const jobs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        // Sort client-side: newest first
+        jobs.sort((a, b) => {
+            const ta = a.createdAt?.toDate?.() ? a.createdAt.toDate().getTime() : new Date(a.createdAt || 0).getTime();
+            const tb = b.createdAt?.toDate?.() ? b.createdAt.toDate().getTime() : new Date(b.createdAt || 0).getTime();
+            return tb - ta;
+        });
+        return jobs;
     },
 };
 

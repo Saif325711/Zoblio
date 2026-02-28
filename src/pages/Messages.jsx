@@ -29,12 +29,18 @@ const Messages = () => {
             try {
                 const q = query(
                     collection(db, 'messages'),
-                    where('participants', 'array-contains', user.uid),
-                    orderBy('lastMessageAt', 'desc')
+                    where('participants', 'array-contains', user.uid)
                 );
                 const snap = await getDocs(q);
-                const convs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-                setConversations(convs);
+                const rawConvs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+                // Sort client-side: latest first
+                rawConvs.sort((a, b) => {
+                    const ta = a.lastMessageAt?.toDate?.() ? a.lastMessageAt.toDate().getTime() : new Date(a.lastMessageAt || 0).getTime();
+                    const tb = b.lastMessageAt?.toDate?.() ? b.lastMessageAt.toDate().getTime() : new Date(b.lastMessageAt || 0).getTime();
+                    return tb - ta;
+                });
+                setConversations(rawConvs);
+                const convs = rawConvs;
 
                 // Auto-select from URL param or first conversation
                 if (conversationId) {

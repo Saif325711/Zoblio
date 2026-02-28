@@ -8,7 +8,6 @@ import {
     deleteDoc,
     query,
     where,
-    orderBy,
     serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -26,11 +25,16 @@ export const jobService = {
             constraints.push(where('type', '==', filters.type));
         }
 
-        constraints.push(orderBy('createdAt', 'desc'));
-
         q = query(q, ...constraints);
         const snapshot = await getDocs(q);
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const jobs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        // Sort client-side: newest first
+        jobs.sort((a, b) => {
+            const ta = a.createdAt?.toDate?.() ? a.createdAt.toDate().getTime() : new Date(a.createdAt || 0).getTime();
+            const tb = b.createdAt?.toDate?.() ? b.createdAt.toDate().getTime() : new Date(b.createdAt || 0).getTime();
+            return tb - ta;
+        });
+        return jobs;
     },
 
     // Get job by ID

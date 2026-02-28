@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import useAuth from '../../../hooks/useAuth';
 import employerService from '../services/employerService';
@@ -9,6 +9,10 @@ import './ManageApplications.css';
 const ManageApplications = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const highlightApplicant = searchParams.get('applicant');
+    const highlightJob = searchParams.get('job');
+    const highlightRef = useRef(null);
 
     const [applications, setApplications] = useState([]);
     const [jobs, setJobs] = useState([]);
@@ -47,13 +51,27 @@ const ManageApplications = () => {
                 for (const chunk of chunks) {
                     const q = query(
                         collection(db, 'applications'),
-                        where('jobId', 'in', chunk),
-                        orderBy('appliedAt', 'desc')
+                        where('jobId', 'in', chunk)
                     );
                     const snap = await getDocs(q);
                     allApps = [...allApps, ...snap.docs.map((d) => ({ id: d.id, ...d.data() }))];
                 }
+                // Sort client-side: newest first
+                allApps.sort((a, b) => {
+                    const ta = a.appliedAt?.toDate?.() ? a.appliedAt.toDate().getTime() : new Date(a.appliedAt || 0).getTime();
+                    const tb = b.appliedAt?.toDate?.() ? b.appliedAt.toDate().getTime() : new Date(b.appliedAt || 0).getTime();
+                    return tb - ta;
+                });
                 setApplications(allApps);
+
+                // Auto-expand the card if coming from a notification
+                if (highlightApplicant && highlightJob) {
+                    const matchId = `${highlightApplicant}_${highlightJob}`;
+                    const found = allApps.find((a) => a.id === matchId || (a.userId === highlightApplicant && a.jobId === highlightJob));
+                    if (found) {
+                        setExpandedApp(found.id);
+                    }
+                }
             } catch (err) {
                 console.error('Error fetching applications:', err);
             } finally {
@@ -61,7 +79,16 @@ const ManageApplications = () => {
             }
         };
         fetchAll();
-    }, [user]);
+    }, [user, highlightApplicant, highlightJob]);
+
+    /* Scroll to highlighted card */
+    useEffect(() => {
+        if (expandedApp && highlightRef.current) {
+            setTimeout(() => {
+                highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+    }, [expandedApp]);
 
     /* Filtered applications */
     const filtered = useMemo(() => {
@@ -255,7 +282,11 @@ const ManageApplications = () => {
                 ) : (
                     <div className="manage-apps__list">
                         {filtered.map((app) => (
-                            <div key={app.id} className={`manage-apps__card glass-card ${expandedApp === app.id ? 'manage-apps__card--expanded' : ''}`}>
+                            <div
+                                key={app.id}
+                                ref={expandedApp === app.id && highlightApplicant ? highlightRef : null}
+                                className={`manage-apps__card glass-card ${expandedApp === app.id ? 'manage-apps__card--expanded' : ''} ${expandedApp === app.id && highlightApplicant ? 'manage-apps__card--highlighted' : ''}`}
+                            >
                                 {/* Card Header */}
                                 <div className="manage-apps__card-header" onClick={() => setExpandedApp(expandedApp === app.id ? null : app.id)}>
                                     <div className="manage-apps__card-avatar">

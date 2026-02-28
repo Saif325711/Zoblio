@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, doc, updateDoc, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import useAuth from '../hooks/useAuth';
 import './Notifications.css';
@@ -17,11 +17,17 @@ const Notifications = () => {
             try {
                 const q = query(
                     collection(db, 'notifications'),
-                    where('recipientId', '==', user.uid),
-                    orderBy('createdAt', 'desc')
+                    where('recipientId', '==', user.uid)
                 );
                 const snap = await getDocs(q);
-                setNotifications(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+                const notifs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+                // Sort client-side: newest first
+                notifs.sort((a, b) => {
+                    const ta = a.createdAt?.toDate?.() ? a.createdAt.toDate().getTime() : new Date(a.createdAt || 0).getTime();
+                    const tb = b.createdAt?.toDate?.() ? b.createdAt.toDate().getTime() : new Date(b.createdAt || 0).getTime();
+                    return tb - ta;
+                });
+                setNotifications(notifs);
             } catch (err) {
                 console.error('Error fetching notifications:', err);
             } finally {
@@ -58,7 +64,10 @@ const Notifications = () => {
         if (!notif.read) markAsRead(notif.id);
 
         if (notif.type === 'new_application') {
-            navigate('/dashboard/employer/applications');
+            const params = new URLSearchParams();
+            if (notif.applicantId) params.set('applicant', notif.applicantId);
+            if (notif.jobId) params.set('job', notif.jobId);
+            navigate(`/dashboard/employer/applications?${params.toString()}`);
         } else if (notif.type === 'new_message') {
             navigate(`/messages/${notif.conversationId || ''}`);
         }
